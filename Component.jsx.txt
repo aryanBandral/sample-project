@@ -1,0 +1,169 @@
+import * as React from 'react';
+import { Alert } from 'react-native';
+import { TextInput, Button, HelperText, Icon} from 'react-native-paper';
+
+const MyComponent = () => {
+  const [email, setEmail] = React.useState("");
+  const [emailError, setEmailError] = React.useState("");
+  const [secureText, setSecureText] = React.useState(true);
+
+  const validateEmail = (text) => {
+    // Regular expression for validating an email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(text)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+    setEmail(text);
+  };
+
+  const onSignin = () => {
+    validateEmail(email)
+    Alert.alert(`New User ${email} Created!`);
+  }
+
+  const togglePass = () => {
+    setSecureText(!secureText);
+  }
+
+  return (
+    <>
+    <TextInput
+      style={{ marginTop: 40, marginHorizontal: 10 }}
+      label="Email"
+      value={email}
+      inputMode='email'
+      onChangeText={validateEmail} />
+
+      <HelperText type="error" visible={!!emailError}>
+        {emailError}
+      </HelperText>
+
+      <TextInput
+        style={{ marginTop: 20, marginHorizontal: 10 }}
+        label="Password"
+        secureTextEntry={secureText}
+        right={<TextInput.Icon 
+          icon="eye"
+          onPress = {togglePass}
+          />}          
+      />
+        
+      <Button mode="contained" onPress={onSignin} style = {{marginTop: 20, marginHorizontal: 80}}>
+        Sign In
+      </Button>
+    </>
+    
+  );
+};
+
+export default MyComponent;
+
+
+// ---------------------------------------------------------------- Class Based Components ----------------------------------------------------------------//
+
+
+import React, {Component} from 'react';
+import { Alert, Image, StyleSheet } from 'react-native';
+import { TextInput, Button, HelperText, Icon} from 'react-native-paper';
+
+class MyComponent extends Component {
+  state = {
+    email:"",
+    emailError: "",
+    password: "",
+    passwordError: "",
+    secureText: true
+    };
+
+    validateEmail = (text) => {
+      // Regular expression for validating an email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(text)) {
+        this.setState({ emailError: "Please enter a valid email address"});
+      } 
+      else {
+        this.setState({ emailError:""});
+      }
+        this.setState({ email: text});
+    };
+
+    validatePassword = (text) => {
+      if (text.length < 8) {
+        this.setState({passwordError: "Password must be at least 8 characters"});
+      }
+      else {
+        this.setState({passwordError: ""});
+      }
+      this.setState({password: text});
+    }
+  
+    onSignin = () => {
+      if (this.state.emailError || this.state.passwordError) {
+        Alert.alert("Invalid email or password");
+        return;
+      }
+
+      else if (!this.state.email || !this.state.password) {
+        Alert.alert(" Both Email and password fields are required");
+        return;
+      }
+      else {
+        Alert.alert(`New User ${this.state.email} Created!`);
+      }
+    };
+  
+    togglePass = () => {
+      this.setState({ secureText: !this.state.secureText});
+    };
+  
+
+  render() {
+
+    return (
+      <>
+       <Image
+        source={require('./LoginImg.png')} 
+        style={{alignSelf: 'center',
+                marginTop: 10,
+              }}
+      />
+
+      <TextInput
+        style={{ marginTop: 40, marginHorizontal: 10 }}
+        label="Email"
+        value={this.state.email}
+        inputMode='email'
+        onChangeText={this.validateEmail} />
+  
+        <HelperText type="error" visible={!!this.state.emailError}>
+          {this.state.emailError}
+        </HelperText>
+  
+        <TextInput
+          style={{ marginTop: 20, marginHorizontal: 10 }}
+          label="Password"
+          secureTextEntry={this.state.secureText}
+          onChangeText={this.validatePassword}
+          right={<TextInput.Icon 
+            icon="eye"
+            onPress = {this.togglePass}
+            />}        
+        />
+
+        <HelperText type="error" visible={!!this.state.passwordError}>
+          {this.state.passwordError}
+        </HelperText>
+          
+        <Button mode="contained" onPress={this.onSignin} style = {{marginTop: 20, marginHorizontal: 80}}>
+          Sign In
+        </Button>
+      </>
+      
+    );
+  }
+  }
+  
+
+export default MyComponent;
