@@ -36,7 +36,7 @@ function DrawerNavigator() {
 
 function StackNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Drawer">
+    <Stack.Navigator initialRouteName="LogIn">
       <Stack.Screen name="LogIn" component={LogIn} options={{ headerShown: false }} />
       <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
       <Stack.Screen name="Drawer" component={DrawerNavigator} options={{ headerShown: false }} />
